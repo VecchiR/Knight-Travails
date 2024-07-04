@@ -159,8 +159,11 @@ function checkPossibleMoves(current, discard) {
 
 function knightMoves(current, target, discard = [current], pathArr = [current]) {
 
+    
+    
     // possiveis movimentos a partir do current
     let checkMoves = checkPossibleMoves(current, discard);
+    const knight = new HashMap(checkMoves.possible.length);
     let possibleMoves = checkMoves.possible;
     discard = checkMoves.discard;
 
@@ -201,6 +204,7 @@ function knightMoves(current, target, discard = [current], pathArr = [current]) 
 //    [3,2]
 //    [1,3]
 
-const knight = new HashMap();
 
 knightMoves([3, 2], [3, 1]);
+
+// mas se eu usar hashmap msm, COMO EU FAÇO COM O KEY? PRA DIVIDIR NOS BUCKETS?
