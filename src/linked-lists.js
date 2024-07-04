@@ -1,5 +1,6 @@
 export class Node {
     constructor() {
+        this.key = null;
         this.value = null;
         this.nextNode = null;
     }
@@ -10,8 +11,9 @@ export class LinkedList {
         this.head = null;
     }
 
-    append(value) {
+    append(key, value) {
         const node = new Node();
+        node.key = key;
         node.value = value;
         if (this.head === null) { this.head = node; return; }
         let current = this.head;
@@ -21,8 +23,9 @@ export class LinkedList {
         current.nextNode = node;
     }
 
-    prepend(value) {
+    prepend(key, value) {
         const node = new Node();
+        node.key = key;
         node.value = value;
         node.nextNode = this.head;
         this.head = node;
@@ -67,30 +70,31 @@ export class LinkedList {
         node.nextNode = null;
     }
 
-    contains(value) {
+    containsKey(key) {
         if (this.head === null) { return false; }
         let node = this.head;
-        while (node.nextNode != null || node === this.head) {
-            if (node.value === value) {return true;}
+        if (node.key === key) { return true; }
+        while (node.nextNode != null) {
             node = node.nextNode;
+            if (node.key === key) { return true; }
         }
         return false;
     }
 
-    find(value) {
+    findKey(key) {
         let index = 0;
         let node = this.head;
-        if (node.value === value) {return index;}
+        if (node.key === key) { return index; }
         while (node.nextNode != null) {
             node = node.nextNode;
             index++;
-            if (node.value === value) {return index;}
+            if (node.key === key) { return index; }
         }
         return null;
     }
 
     toString() {
-        if (this.head === null) {return null;}
+        if (this.head === null) { return null; }
         let string = '';
         let node = this.head;
         while (node.nextNode != null) {
@@ -102,8 +106,8 @@ export class LinkedList {
     }
 
     insertAt(value, index) {
-        if (index > this.size() || index < 0) { return 'Index is out of range!' ;}
-        if (index === this.size()) {return this.append(value);}
+        if (index > this.size() || index < 0) { return 'Index is out of range!'; }
+        if (index === this.size()) { return this.append(value); }
         let node = this.head;
         let count = 0;
         while (count < index) {
@@ -118,8 +122,8 @@ export class LinkedList {
         node.nextNode = temp;
     }
 
-    removeAt(index){
-        if (index === null || index >= this.size() || index < 0) { return 'Index is out of range!' ;}
+    removeAt(index) {
+        if (index === null || index < 0 || index >= this.size()) { return 'Index is out of range!'; }
         if (index === 0) {
             this.head = this.head.nextNode;
             return;
@@ -138,12 +142,3 @@ export class LinkedList {
     }
 
 }
-
-
-// const list = new LinkedList();
-// list.append('hey');
-// list.append('ho');
-// list.append('lesgo');
-
-
-// console.log(list.toString());
