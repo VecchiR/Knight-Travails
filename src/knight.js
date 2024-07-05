@@ -159,43 +159,56 @@ function checkPossibleMoves(current, discard) {
 
 function knightMoves(current, target, discard = [current], pathArr = [current]) {
 
-    
-    
+
+
     // possiveis movimentos a partir do current
     let checkMoves = checkPossibleMoves(current, discard);
-    const knight = new HashMap(checkMoves.possible.length);
-    let possibleMoves = checkMoves.possible;
+    const knight = new HashMap();
+    checkMoves.possible.forEach((move) => knight.set(move, current));
     discard = checkMoves.discard;
 
-    // procura pelo target nessas opções
-    if (possibleMoves.find((move) => compareArrays(move, target))) {
-        console.log('achei 1');
+    let lvl = 0;
+    let breakout = false;
+    while (discard.length < 16 && !breakout) {
+
+        lvl++;
+
+        if (knight.keys().some((x) => compareArrays(x, target))) {
+            return console.log('achei 1');
+        }
+
+        else {
+            knight.buckets.some((buc) => {
+                let i = 1;
+                let lvlbuc = buc;
+                while (i < lvl) {
+                    try {
+                        lvlbuc = buc.head.nextNode;
+                    } catch { }
+                    i++;
+                }
+                try {
+                    let test = lvlbuc.head.nextNode;
+                    lvlbuc.head.nextNode = new HashMap();
+                    let bucketMoves = checkPossibleMoves(lvlbuc.head.key, discard);
+                    bucketMoves.possible.forEach((move) => lvlbuc.head.nextNode.set(move, lvlbuc.head.key));
+                    discard = bucketMoves.discard;
+                    let foundit;
+                    if (lvlbuc.head.nextNode.keys().some((x) => {
+                        if (compareArrays(x, target)) {
+                            foundit = x;
+                            return true;
+                        } 
+                        })) {
+                        console.log('achei piranho', lvlbuc);
+                        return breakout = true;
+
+                    }
+                } catch { }
+            })
+        }
+
     }
-
-    // se nao encontrou, checa possiveis movimentos a partir de cada possivel movimento (eliminando o space anterior 
-    // - sempre dá pra voltar de onde saiu)
-  let letsbreak = false;
-    while (discard.length < 16 && !letsbreak) {
-        let tempMoves;
-        possibleMoves.some((move) => {
-            tempMoves = checkPossibleMoves(move, discard);
-            move = tempMoves.possible;
-            discard = tempMoves.discard;
-            if (move.find((move) => compareArrays(move, target))) {
-                console.log('achei 2', move);
-                letsbreak = true;
-                return true;
-            }
-            else { return false; }
-        })
-    }
-
-    // procura pelo target nessas opções
-
-    // repete isso até encontrar
-
-    // retorna o primeiro caminho a chegar no target (será O mais curto OU UM deles, se mais de 1 opção)
-
 }
 
 //knightMoves([3, 2], [1, 3]);
@@ -205,6 +218,6 @@ function knightMoves(current, target, discard = [current], pathArr = [current]) 
 //    [1,3]
 
 
-knightMoves([3, 2], [3, 1]);
+knightMoves([3, 2], [2, 3]);
 
 // mas se eu usar hashmap msm, COMO EU FAÇO COM O KEY? PRA DIVIDIR NOS BUCKETS?

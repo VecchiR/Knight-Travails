@@ -2,34 +2,58 @@ import { Node, LinkedList } from "./linked-lists.js";
 
 export class HashMap {
     constructor(capacity) {
-        if(!capacity) {capacity = 8;}
+        if (!capacity) { capacity = 8; }
         this.loadFactor = 0.8;
         this.buckets = Array(capacity);
-        this.capacity = capacity; 
+        this.capacity = capacity;
         for (let i = 0; i < this.capacity; i++) {
             this.buckets[i] = new LinkedList();
         }
     }
 
-    hash(key) {
-        let hashCode = 0;
-        const primeNumber = 31;
-        for (let i = 0; i < key.length; i++) {
-            hashCode = primeNumber * hashCode + key.charCodeAt(i);
-            hashCode = hashCode % this.capacity;
+    hash(move, current) {
+        let hashCode = [0, 0];
+        hashCode[0] = move[0] - current[0];
+        hashCode[1] = move[1] - current[1];
+        hashCode = hashCode.toString();
+        switch (hashCode) {
+            case ("-2,-1"): //2down, 1left
+                hashCode = 0;
+                break;
+            case ("-2,1"): //2down, 1right
+                hashCode = 1;
+                break;
+            case ("1,-2"): //2left, 1down
+                hashCode = 2;
+                break;
+            case ("-1,-2"): //2left, 1up
+                hashCode = 3;
+                break;
+            case ("2,-1"): //2up, 1left
+                hashCode = 4;
+                break;
+            case ("2,1"): //2up, 1right
+                hashCode = 5;
+                break;
+            case ("-1,2"): //2right, 1up
+                hashCode = 6;
+                break;
+            case ("1,2"): //2right, 1down
+                hashCode = 7;
+                break;
         }
         return hashCode;
     }
 
-    set(key, value) {
+    set(move, current) {
         // this.growIfNeeded();
-        const bucketIndex = this.hash(key);
+        const bucketIndex = this.hash(move, current);
         const bucket = this.buckets[bucketIndex];
         try {
-            const keyIndex = bucket.findKey(key);
-            bucket.at(keyIndex).key = key;
-            bucket.at(keyIndex).value = value;
-        } catch { bucket.append(key, value); }
+            const keyIndex = bucket.findKey(move);
+            bucket.at(keyIndex).key = move;
+            bucket.at(keyIndex).value = move;
+        } catch { bucket.append(move, move); }
     }
 
     get(key) {
@@ -117,11 +141,11 @@ export class HashMap {
 
     needForGrowth() {
         const numberOfStoredKeys = this.keys().length;
-        return numberOfStoredKeys/this.capacity >= this.loadFactor;
+        return numberOfStoredKeys / this.capacity >= this.loadFactor;
     }
 
     resizeBuckets() {
-        const newCapacity = this.capacity*2;
+        const newCapacity = this.capacity * 2;
         this.capacity = newCapacity;
         this.buckets = Array(newCapacity);
         for (let i = 0; i < newCapacity; i++) {
