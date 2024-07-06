@@ -1,7 +1,8 @@
 import { HashMap } from "./hashmap.js";
 import { LinkedList } from "./linked-lists.js";
 
-function message(moveCount, pathArr) {
+function message(pathArr) {
+    let moveCount = pathArr.length - 1;
     console.log(`You made it in ${moveCount} moves!  Here's your path:`);
     console.log(...pathArr);
 }
@@ -167,6 +168,7 @@ function knightMoves(current, target, discard = [current], pathArr = [current]) 
     checkMoves.possible.forEach((move) => knight.set(move, current));
     discard = checkMoves.discard;
 
+    let path = [];
     let lvl = 0;
     let breakout = false;
     while (discard.length < 16 && !breakout) {
@@ -174,16 +176,27 @@ function knightMoves(current, target, discard = [current], pathArr = [current]) 
         lvl++;
 
         if (knight.keys().some((x) => compareArrays(x, target))) {
-            return console.log('achei 1');
+            path = [current];
+            path.push(target);
+            return breakout = true;
         }
 
         else {
             knight.buckets.some((buc) => {
+
+
+
+                try {
+                    path = [current,buc.head.key];
+                } catch {
+                    return;
+                }
                 let i = 1;
                 let lvlbuc = buc;
                 while (i < lvl) {
                     try {
                         lvlbuc = buc.head.nextNode;
+                        path.push(lvlbuc.head.key);
                     } catch { }
                     i++;
                 }
@@ -200,15 +213,22 @@ function knightMoves(current, target, discard = [current], pathArr = [current]) 
                             return true;
                         } 
                         })) {
-                        console.log('achei piranho', lvlbuc);
+                        path.push(foundit);
                         return breakout = true;
 
                     }
                 } catch { }
+
+
+
+
+
             })
         }
 
     }
+
+    return message(path);
 }
 
 //knightMoves([3, 2], [1, 3]);
@@ -219,5 +239,9 @@ function knightMoves(current, target, discard = [current], pathArr = [current]) 
 
 
 knightMoves([3, 2], [2, 3]);
+knightMoves([1, 1], [4, 3]);
+knightMoves([4, 4], [2, 3]);
+knightMoves([1, 2], [4, 1]);
+knightMoves([4, 2], [2, 4]);
 
 // mas se eu usar hashmap msm, COMO EU FAÇO COM O KEY? PRA DIVIDIR NOS BUCKETS?
