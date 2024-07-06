@@ -1,8 +1,7 @@
 export class Node {
     constructor() {
-        this.key = null;
-        this.value = null;
-        this.nextNode = null;
+        this.position = null;
+        this.possibleMoves = null;
     }
 }
 
@@ -11,23 +10,22 @@ export class LinkedList {
         this.head = null;
     }
 
-    append(key, value) {
+    append(position) {
         const node = new Node();
-        node.key = key;
-        node.value = value;
+        node.position = position;
         if (this.head === null) { this.head = node; return; }
         let current = this.head;
-        while (current.nextNode != null) {
-            current = current.nextNode;
+        while (current.possibleMoves != null) {
+            current = current.possibleMoves;
         }
-        current.nextNode = node;
+        current.possibleMoves = node;
     }
 
     prepend(key, value) {
         const node = new Node();
-        node.key = key;
+        node.position = key;
         node.value = value;
-        node.nextNode = this.head;
+        node.possibleMoves = this.head;
         this.head = node;
     }
 

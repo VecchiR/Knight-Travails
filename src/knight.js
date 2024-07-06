@@ -238,10 +238,6 @@ function knightMoves(current, target, discard = [current], pathArr = [current]) 
 //    [1,3]
 
 
-knightMoves([3, 2], [2, 3]);
-knightMoves([1, 1], [4, 3]);
-knightMoves([4, 4], [2, 3]);
-knightMoves([1, 2], [4, 1]);
 knightMoves([4, 2], [2, 4]);
 
 // mas se eu usar hashmap msm, COMO EU FAÇO COM O KEY? PRA DIVIDIR NOS BUCKETS?
